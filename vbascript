@@ -1,0 +1,83 @@
+Sub VBA_StockProject()
+
+For Each ws In Worksheets
+
+    Dim Ticker As String
+    Dim YearlyChange As Double
+    Dim PercentChange As Double
+    Dim Volume As Double
+    Dim StockOpen As Double
+    Dim StockClose As Double
+    Dim lastrow As Double
+    Dim SummaryTRow As Double
+    SummaryTRow = 2
+    lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+    ws.Range("I1") = "Ticker"
+    ws.Range("J1") = "Yearly Change"
+    ws.Range("K1") = "Percent Change"
+    ws.Range("L1") = "Total Stock Volume"
+    Volume = 0
+
+'-------------------------------------------------------------------'
+
+For i = 2 To lastrow
+
+If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1) Then
+    Ticker = ws.Cells(i, 1).Value
+    Volume = Volume + ws.Cells(i, 7).Value
+
+StockClose = ws.Cells(i, 6)
+YearlyChange = StockClose - StockOpen
+PercentChange = (StockClose - StockOpen) / StockOpen
+
+ws.Range("I" & SummaryTRow).Value = Ticker
+ws.Range("L" & SummaryTRow).Value = Volume
+ws.Range("J" & SummaryTRow).Value = YearlyChange
+ws.Range("K" & SummaryTRow).Value = PercentChange
+ws.Range("K" & SummaryTRow).Style = "Percent"
+ws.Range("K" & SummaryTRow).NumberFormat = "0.00%"
+
+SummaryTRow = SummaryTRow + 1
+
+ElseIf ws.Cells(i - 1, 1).Value <> ws.Cells(i, 1) Then
+    StockOpen = ws.Cells(i, 3)
+    
+Else: Volume = Volume + ws.Cells(i, 7).Value
+
+End If
+
+    Next i
+
+'-----------------------------------------------------------------
+
+For i = 2 To lastrow
+
+If ws.Range("J" & i).Value > 0 Then
+        ws.Range("J" & i).Interior.ColorIndex = 4
+
+ElseIf ws.Range("J" & i).Value < 0 Then
+        ws.Range("J" & i).Interior.ColorIndex = 3
+        
+End If
+
+    Next i
+
+ws.Columns("A:Q").AutoFit
+    
+Next ws
+
+'---------------------------------------------------------------------
+    'ws.Range("O2").Value = "Greatest % Increase"
+    'ws.Range("O3").Value = "Greatest % Decrease"
+    'ws.Range("O4").Value = "Greatest Total Volume"
+ 
+    'Greatest_Increase = ws.Range("K2").Value
+    'Greatest_Decrease = ws.Range("K2").Value
+    'Greatest_Total = ws.Range("L2").Value
+    'Confused at the moment and struggling here'    
+        
+
+
+
+
+End Sub
