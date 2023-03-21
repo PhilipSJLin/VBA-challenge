@@ -61,23 +61,81 @@ ElseIf ws.Range("J" & i).Value < 0 Then
 End If
 
     Next i
-
-ws.Columns("A:Q").AutoFit
     
-Next ws
 
 '---------------------------------------------------------------------
-    'ws.Range("O2").Value = "Greatest % Increase"
-    'ws.Range("O3").Value = "Greatest % Decrease"
-    'ws.Range("O4").Value = "Greatest Total Volume"
- 
-    'Greatest_Increase = ws.Range("K2").Value
-    'Greatest_Decrease = ws.Range("K2").Value
-    'Greatest_Total = ws.Range("L2").Value
-    'Confused at the moment and struggling here'    
+
+
+'Declare Variables
+Dim Greatest_Increase As Double
+Dim Greatest_Decrease As Double
+Dim Greatest_Total_Volume As Double
+Greatest_Increase = Range("K2").Value
+Greatest_Decrease = Range("K2").Value
+Greatest_Total_Volume = Range("L2").Value
+    
+    
+'Determine Lastrow of Unique Tickers
+Lastrow2 = ws.Cells(Rows.Count, 9).End(xlUp).Row
+    
+'Assign Value to Greatest % increase, decrease, Total Volume, Ticker, and Value
+ws.Range("O2").Value = "Greatest % increase"
+ws.Range("O3").Value = "Greatest % decrease"
+ws.Range("O4").Value = "Greatest Total Volume"
+ws.Range("P1").Value = "Ticker"
+ws.Range("Q1").Value = "Value"
+    
         
+'loop through Unique Tickers
+For i = 2 To Lastrow2
+        
+        
+'Set a condition to determine Greatest Increase based on percent change
+If ws.Cells(i, 11).Value > Greatest_Increase Then
+Greatest_Increase = ws.Cells(i, 11).Value
+        
+ws.Range("P2").Value = ws.Cells(i, 9).Value
+              
+End If
+        
+        
+'Retrieve greatest increase and format to percent
+ws.Range("Q2").Value = Format(Greatest_Increase, "Percent")
+        
+        
+'Set a condition to determine Greatest Derease based on percent change
+If ws.Cells(i, 11).Value < Greatest_Decrease Then
+    Greatest_Decrease = ws.Cells(i, 11).Value
+        
+    ws.Range("P3").Value = ws.Cells(i, 9).Value
+        
+        
+End If
+        
+'Retrieve greatest decrease and format to percent
+ws.Range("Q3").Value = Format(Greatest_Decrease, "Percent")
+        
+        
+'Set a condition to determine Greatest total volume based on total stock volume
+If ws.Cells(i, 12).Value > Greatest_Total_Volume Then
+    Greatest_Total_Volume = ws.Cells(i, 12).Value
+        
+    ws.Range("P4").Value = ws.Cells(i, 9).Value
+        
+End If
+        
+'Retrieve greatest total volume and format to scientific
+ws.Range("Q4").Value = Format(Greatest_Total_Volume, "Scientific")
+        
+        
+Next i
 
-
+'Format active columns to autofit
+ws.Columns("A:Q").AutoFit
+        
+    
+'loop through next worksheet
+Next ws
 
 
 End Sub
